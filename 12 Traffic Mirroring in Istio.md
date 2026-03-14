@@ -49,22 +49,35 @@ Traffic mirroring helps engineers test new versions safely.
 # 📄 VirtualService Configuration Example
 
 ```yaml id="mirror-yaml"
+# ==========================================================
+# 🌐 ISTIO VIRTUAL SERVICE - TRAFFIC MIRRORING / SHADOWING
+# ==========================================================
+# This configuration sends real user traffic to v1
+# and mirrors a percentage of that traffic to v2
+# for testing without affecting real users.
+# ==========================================================
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: payments
+  name: payments                 # 📌 Name of the VirtualService
 spec:
-  hosts:
-  - payments
-  http:
+  hosts:                         # 🎯 Target Service
+  - payments                     # Service that receives incoming traffic
+
+  http:                              # 🚦 HTTP Routing Rules
   - route:
     - destination:
         host: payments
-        subset: v1
-    mirror:
+        subset: v1               # ✅ Primary stable version handling real user traffic
+
+    mirror:                      # 🪞 Traffic Mirroring (Shadow Testing)
       host: payments
-      subset: v2
-    mirror_percent: 20
+      subset: v2                 # 🎯 New version used for testing silently
+
+    mirror_percent: 20           # 📊 20% of real requests duplicated to v2
+                                 # ⚠️ Mirrored traffic does NOT affect user response
+                                 # ⚠️ User only receives response from v1
 ```
 
 ---
