@@ -35,28 +35,39 @@ When a service becomes unhealthy, Istio temporarily removes it from load balanci
 ## Circuit Breaker Configuration Example
 
 ```yaml id="cb1"
+# Istio DestinationRule for implementing Circuit Breaking
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
+
 metadata:
-  name: reviews-cb
+  name: reviews-cb              # Name of the DestinationRule
+
 spec:
-  host: reviews
+  host: reviews                 # This rule applies to the 'reviews' service
+
   subsets:
-  - name: v1
+  - name: v1                    # Define subset called v1
     labels:
-      version: v1
-  trafficPolicy:
-    connectionPool:
-      tcp:
-        maxConnections: 1
-      http:
-        http1MaxPendingRequests: 1
-        maxRequestsPerConnection: 1
-    outlierDetection:
-      consecutive5xxErrors: 1
-      interval: 5s
-      baseEjectionTime: 15s
-      maxEjectionPercent: 100
+      version: v1               # Routes traffic to pods with label version: v1
+
+    trafficPolicy:
+
+      # Connection pool settings to limit traffic
+      connectionPool:
+
+        tcp:
+          maxConnections: 1     # Allow only 1 TCP connection at a time
+
+        http:
+          http1MaxPendingRequests: 1   # Only 1 HTTP request can wait in queue
+          maxRequestsPerConnection: 1  # Only 1 request per connection (no keep-alive)
+
+      # Outlier detection to remove unhealthy pods
+      outlierDetection:
+        consecutive5xxErrors: 1   # Eject pod after 1 consecutive 5xx error
+        interval: 5s              # Check for errors every 5 seconds
+        baseEjectionTime: 15s     # Pod stays ejected for 15 seconds
+        maxEjectionPercent: 100   # Up to 100% pods can be ejected if all fail
 ```
 
 ---
@@ -124,22 +135,28 @@ Retries are defined in a **VirtualService**.
 ## Retry Configuration Example
 
 ```yaml id="retry2"
+# Istio VirtualService configuration for retry mechanism
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
+
 metadata:
-  name: my-app
+  name: my-app                     # Name of the VirtualService
+
 spec:
   hosts:
-  - my-app
+  - my-app                         # Applies to traffic going to the 'my-app' service
+
   http:
   - route:
     - destination:
-        host: my-app
+        host: my-app               # Route traffic to the 'my-app' service
+
     retries:
-      attempts: 3
-      perTryTimeout: 2s
-      retryOn: 5xx,gateway-error,connect-failure
-    timeout: 5s
+      attempts: 3                  # Retry failed requests up to 3 times
+      perTryTimeout: 2s            # Each retry attempt waits max 2 seconds
+      retryOn: 5xx,gateway-error,connect-failure  # Retry only on these errors
+
+    timeout: 5s                    # Total timeout for the request including retries
 ```
 
 ---
