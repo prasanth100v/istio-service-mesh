@@ -95,34 +95,45 @@ This allows targeted testing without impacting all users.
 ```yaml id="fault-yaml"
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
+
 metadata:
-  name: payment-fault-abort
+  name: payment-fault-abort        # Name of the VirtualService
+
 spec:
   hosts:
-  - payment
+  - payment                        # Applies to requests going to the 'payment' service
+
   http:
   - match:
     - headers:
         user-agent:
-          regex: ".*Mobile.*"
+          regex: ".*Mobile.*"      # Match requests only if User-Agent contains "Mobile"
+
+    # Fault Injection configuration
     fault:
       delay:
         percentage:
-          value: 20.0
-        fixedDelay: 3s
+          value: 20.0              # Inject delay in 20% of matching requests
+        fixedDelay: 3s             # Each delayed request will be delayed by 3 seconds
+
       abort:
         percentage:
-          value: 5.0
-        httpStatus: 500
+          value: 5.0               # Abort (fail) 5% of matching requests
+        httpStatus: 500            # Return HTTP 500 Internal Server Error
+
+    # Retry configuration
     retries:
-      attempts: 3
-      perTryTimeout: 2s
-      retryOn: gateway-error,connect-failure,refused-stream
-    timeout: 5s
+      attempts: 3                  # Retry failed requests up to 3 times
+      perTryTimeout: 2s            # Timeout for each retry attempt
+      retryOn: gateway-error,connect-failure,refused-stream  # Conditions to retry
+
+    timeout: 5s                    # Total request timeout including retries
+
+    # Routing configuration
     route:
     - destination:
-        host: payment
-        subset: v1
+        host: payment              # Target service name
+        subset: v1                 # Target version (subset v1 defined in DestinationRule)
 ```
 
 ---
