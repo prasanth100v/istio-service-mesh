@@ -1,3 +1,5 @@
+## ⚡ Istio Service Mesh in Kubernetes — Rapid Fire Q&A
+
 | 🔢 Q#   | ❓ Question                                 | 💡 Answer                                                                     |
 | ------- | ------------------------------------------ | ----------------------------------------------------------------------------- |
 | 🔹 Q1   | What is Istio?                             | 👉 An open-source service mesh that manages service-to-service communication. |
