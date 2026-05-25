@@ -21,7 +21,7 @@
 | 🔀 Q17  | What is timeout policy?                      | 👉 `Limits request duration.`                                                  |
 | 🛡️ Q18 | What is circuit breaking?                    | 👉 Prevents `cascading failures. `                                           |
 | 🛡️ Q18 | What is cascading failure?                 | In Istio, a cascading failure is a chain reaction where failure of one microservice causes other dependent services to fail, eventually affecting the entire application system. |
-| 🛡️ Q19 | 🔹 Key Goal in Istio "Fail fast instead of fail everywhere."  | 👉 quickly stopping requests to a `failing service` so the failure does not spread across the entire system.   |
+| 🛡️ Q19 | 🔹 circuit breaking Goal in Istio "Fail fast instead of fail everywhere."  | 👉 Quickly stopping requests to a `failing service` so the failure does not spread across the entire system.   |
 | 🛡️ Q19 | What is fault injection?                     | 👉 Simulates delays/errors for testing.                                      |
 | 🔐 Q20  | Does Istio support mTLS?                     | 👉 ✅` Yes`                                                                     |
 | 🔐 Q21  | What is mTLS?                                | 👉 Mutual TLS for encrypted service communication.                           |
