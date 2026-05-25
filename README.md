@@ -1,321 +1,149 @@
 # 🌈 Istio Service Mesh Glossary 
-------------------------------------------------------------------------
-
 ## 🔵 Core Concepts
+| 🌟 Term                   | 📘 Meaning                                                         |
+| ------------------------- | ------------------------------------------------------------------ |
+| 🧩 **Service Mesh**       | Infrastructure layer that manages service-to-service communication |
+| 🚦 **Traffic Management** | Controlling how traffic flows between microservices                |
+| 🧠 **Control Plane**      | Manages configuration and policies for the mesh                    |
+| 🔁 **Data Plane**         | Envoy proxies that handle actual traffic between services          |
+| 📦 **Workload**           | Application instance running inside Kubernetes                     |
+| 🏷️ **Namespace**         | Kubernetes logical grouping of resources                           |
+| 🪪 **Workload Identity**  | Unique identity assigned to a workload                             |
+| 🔎 **Service Discovery**  | Automatic detection of services in the mesh                        |
+| 🧱 **Microservices**      | Architecture where applications consist of many small services     |
 
-🧩 **Service Mesh**\
-Infrastructure layer that manages service‑to‑service communication.
-
-🚦 **Traffic Management**\
-Controlling how traffic flows between microservices.
-
-🧠 **Control Plane**\
-Manages configuration and policies for the mesh.
-
-🔁 **Data Plane**\
-Envoy proxies that handle actual traffic between services.
-
-📦 **Workload**\
-Application instance running inside Kubernetes.
-
-🏷 **Namespace**\
-Kubernetes logical grouping of resources.
-
-🪪 **Workload Identity**\
-Unique identity assigned to a workload.
-
-🔎 **Service Discovery**\
-Automatic detection of services in the mesh.
-
-🧱 **Microservices**\
-Architecture where applications consist of many small services.
-
-------------------------------------------------------------------------
+---
 
 ## 🟣 Istio Components
+| 🌟 Term                | 📘 Meaning                                                              |
+| ---------------------- | ----------------------------------------------------------------------- |
+| 🧠 **Istiod**          | Unified control plane component managing configuration and certificates |
+| 🚀 **Envoy Proxy**     | Sidecar proxy used by Istio for traffic control                         |
+| 🛰️ **Pilot**          | Component responsible for traffic routing configuration                 |
+| 🔐 **Citadel**         | Original certificate authority component (now merged into Istiod)       |
+| 📜 **Galley**          | Configuration validation component (merged into Istiod)                 |
+| 🌍 **Ingress Gateway** | Entry point for external traffic entering the mesh                      |
+| 🌐 **Egress Gateway**  | Controls traffic leaving the service mesh                               |
+| 🚪 **Gateway**         | Istio resource that manages external traffic                            |
 
-🧠 **Istiod**\
-Unified control plane component managing configuration and certificates.
-
-🚀 **Envoy Proxy**\
-Sidecar proxy used by Istio for traffic control.
-
-🛰 **Pilot**\
-Component responsible for traffic routing configuration.
-
-🔐 **Citadel**\
-Original certificate authority component (now merged into Istiod).
-
-📜 **Galley**\
-Configuration validation component (merged into Istiod).
-
-🌍 **Ingress Gateway**\
-Entry point for external traffic entering the mesh.
-
-🌐 **Egress Gateway**\
-Controls traffic leaving the service mesh.
-
-🚪 **Gateway**\
-Istio resource that manages external traffic.
-
-------------------------------------------------------------------------
+---
 
 ## 🟢 Traffic Management
+| 🌟 Term                        | 📘 Meaning                                                     |
+| ------------------------------ | -------------------------------------------------------------- |
+| 🧭 **Virtual Service**         | Defines routing rules for traffic                              |
+| 🎯 **Destination Rule**        | Policies applied after routing decisions                       |
+| ⚖️ **Load Balancing**          | Distributes traffic across service instances                   |
+| 🧪 **Canary Deployment**       | Gradually release a new version to a small percentage of users |
+| 🔵 **Blue-Green Deployment**   | Switch between two identical environments                      |
+| 🔀 **Traffic Shifting**        | Move traffic between versions                                  |
+| ⏱️ **Timeout**                 | Maximum time allowed for a request                             |
+| 🔁 **Retries**                 | Automatic retry of failed requests                             |
+| 💥 **Fault Injection**         | Inject failures for resilience testing                         |
+| 🧯 **Circuit Breaker**         | Stops sending traffic to failing services                      |
+| 📍 **Locality Load Balancing** | Routes traffic to nearest instance                             |
+| 🧾 **Header Routing**          | Route traffic based on HTTP headers                            |
+| 🔍 **Path Routing**            | Route traffic based on URL path                                |
+| 📦 **Subset**                  | Group of service instances                                     |
 
-🧭 **Virtual Service**\
-Defines routing rules for traffic.
-
-🎯 **Destination Rule**\
-Policies applied after routing decisions.
-
-⚖ **Load Balancing**\
-Distributes traffic across service instances.
-
-🧪 **Canary Deployment**\
-Gradually release a new version to a small percentage of users.
-
-🔵 **Blue‑Green Deployment**\
-Switch between two identical environments.
-
-🔀 **Traffic Shifting**\
-Move traffic between versions.
-
-⏱ **Timeout**\
-Maximum time allowed for a request.
-
-🔁 **Retries**\
-Automatic retry of failed requests.
-
-💥 **Fault Injection**\
-Inject failures for resilience testing.
-
-🧯 **Circuit Breaker**\
-Stops sending traffic to failing services.
-
-📍 **Locality Load Balancing**\
-Routes traffic to nearest instance.
-
-🧾 **Header Routing**\
-Route traffic based on HTTP headers.
-
-🔍 **Path Routing**\
-Route traffic based on URL path.
-
-📦 **Subset**\
-Group of service instances.
-
-------------------------------------------------------------------------
+---
 
 ## 🟡 Security
+| 🌟 Term                      | 📘 Meaning                              |
+| ---------------------------- | --------------------------------------- |
+| 🔐 **mTLS (Mutual TLS)**     | Encrypts communication between services |
+| 🪪 **Authentication**        | Verifies service identity               |
+| 🚫 **Authorization Policy**  | Controls which services can communicate |
+| 🔑 **JWT (JSON Web Token)**  | Authentication token used in APIs       |
+| 🛡️ **Zero Trust Security**  | Every request must be verified          |
+| 🧾 **RBAC**                  | Role-based access control               |
+| 🔑 **Certificate Authority** | Issues TLS certificates                 |
+| 🪪 **SPIFFE Identity**       | Standard identity format for workloads  |
+| 🔄 **Certificate Rotation**  | Automatic renewal of certificates       |
+| 🔍 **Policy Enforcement**    | Applying security policies              |
 
-🔐 **mTLS (Mutual TLS)**\
-Encrypts communication between services.
-
-🪪 **Authentication**\
-Verifies service identity.
-
-🚫 **Authorization Policy**\
-Controls which services can communicate.
-
-🔑 **JWT (JSON Web Token)**\
-Authentication token used in APIs.
-
-🛡 **Zero Trust Security**\
-Every request must be verified.
-
-🧾 **RBAC**\
-Role-based access control.
-
-🔑 **Certificate Authority**\
-Issues TLS certificates.
-
-🪪 **SPIFFE Identity**\
-Standard identity format for workloads.
-
-🔄 **Certificate Rotation**\
-Automatic renewal of certificates.
-
-🔍 **Policy Enforcement**\
-Applying security policies.
-
-------------------------------------------------------------------------
+---
 
 ## 🟠 Observability
+| 🌟 Term             | 📘 Meaning                              |
+| ------------------- | --------------------------------------- |
+| 📊 **Metrics**      | Performance measurements of services    |
+| 📜 **Logs**         | Records of events generated by services |
+| 🧭 **Tracing**      | Tracking requests across services       |
+| 📈 **Prometheus**   | Metrics monitoring system               |
+| 📊 **Grafana**      | Visualization dashboard                 |
+| 🔎 **Kiali**        | Istio service mesh observability UI     |
+| 🧵 **Jaeger**       | Distributed tracing system              |
+| 📡 **Telemetry**    | Collection of metrics, logs, traces     |
+| 📉 **Latency**      | Time taken for a request                |
+| 📦 **Request Rate** | Number of requests per second           |
+| ❌ **Error Rate**    | Percentage of failed requests           |
 
-📊 **Metrics**\
-Performance measurements of services.
-
-📜 **Logs**\
-Records of events generated by services.
-
-🧭 **Tracing**\
-Tracking requests across services.
-
-📈 **Prometheus**\
-Metrics monitoring system.
-
-📊 **Grafana**\
-Visualization dashboard.
-
-🔎 **Kiali**\
-Istio service mesh observability UI.
-
-🧵 **Jaeger**\
-Distributed tracing system.
-
-📡 **Telemetry**\
-Collection of metrics, logs, traces.
-
-📉 **Latency**\
-Time taken for a request.
-
-📦 **Request Rate**\
-Number of requests per second.
-
-❌ **Error Rate**\
-Percentage of failed requests.
-
-------------------------------------------------------------------------
+---
 
 ## 🔴 Networking
+| 🌟 Term                      | 📘 Meaning                                     |
+| ---------------------------- | ---------------------------------------------- |
+| 🌐 **HTTP Routing**          | Routing decisions based on HTTP data           |
+| 📡 **TCP Traffic**           | Layer 4 communication                          |
+| 🌍 **Ingress Traffic**       | Traffic entering the mesh                      |
+| 🚪 **Egress Traffic**        | Traffic leaving the mesh                       |
+| 🔗 **Service Entry**         | Allows external services in the mesh           |
+| 🔌 **External Service**      | Service outside Kubernetes                     |
+| 🔁 **Forward Proxy**         | Proxy forwarding client requests               |
+| 📦 **Sidecar Proxy**         | Proxy container running alongside applications |
+| 🔄 **Dynamic Configuration** | Configuration changes without restart          |
 
-🌐 **HTTP Routing**\
-Routing decisions based on HTTP data.
-
-📡 **TCP Traffic**\
-Layer 4 communication.
-
-🌍 **Ingress Traffic**\
-Traffic entering the mesh.
-
-🚪 **Egress Traffic**\
-Traffic leaving the mesh.
-
-🔗 **Service Entry**\
-Allows external services in the mesh.
-
-🔌 **External Service**\
-Service outside Kubernetes.
-
-🔁 **Forward Proxy**\
-Proxy forwarding client requests.
-
-📦 **Sidecar Proxy**\
-Proxy container running alongside applications.
-
-🔄 **Dynamic Configuration**\
-Configuration changes without restart.
-
-------------------------------------------------------------------------
+---
 
 ## 🟤 Kubernetes Related
+| 🌟 Term                                 | 📘 Meaning                                |
+| --------------------------------------- | ----------------------------------------- |
+| ☸️ **Kubernetes**                       | Container orchestration platform          |
+| 📦 **Pod**                              | Smallest deployable unit in Kubernetes    |
+| 📜 **CRD (Custom Resource Definition)** | Extension for custom Kubernetes resources |
+| 📂 **ConfigMap**                        | Stores configuration data                 |
+| 🔐 **Secret**                           | Stores sensitive data                     |
+| 📦 **Deployment**                       | Manages stateless applications            |
+| 📊 **ReplicaSet**                       | Maintains pod replicas                    |
+| 🔁 **Rolling Update**                   | Gradual update of application versions    |
 
-☸ **Kubernetes**\
-Container orchestration platform.
-
-📦 **Pod**\
-Smallest deployable unit in Kubernetes.
-
-📜 **CRD (Custom Resource Definition)**\
-Extension for custom Kubernetes resources.
-
-📂 **ConfigMap**\
-Stores configuration data.
-
-🔐 **Secret**\
-Stores sensitive data.
-
-📦 **Deployment**\
-Manages stateless applications.
-
-📊 **ReplicaSet**\
-Maintains pod replicas.
-
-🔁 **Rolling Update**\
-Gradual update of application versions.
-
-------------------------------------------------------------------------
+---
 
 ## 🧩 Advanced Concepts
+| 🌟 Term                                   | 📘 Meaning                                     |
+| ----------------------------------------- | ---------------------------------------------- |
+| 🧠 **xDS API**                            | Envoy configuration APIs used by Istio         |
+| 📡 **ADS (Aggregated Discovery Service)** | Unified xDS stream                             |
+| 📊 **Control Plane Scaling**              | Scaling Istiod for large clusters              |
+| 🧵 **Service Graph**                      | Visual representation of service communication |
+| 🧠 **Multi-Cluster Mesh**                 | Service mesh spanning multiple clusters        |
+| 🌎 **Multi-Network Mesh**                 | Service mesh across different networks         |
+| 🔀 **Traffic Mirroring**                  | Copy traffic to another service version        |
+| 📉 **Rate Limiting**                      | Limit number of requests                       |
+| 📊 **Quota**                              | Usage limits for resources                     |
+| 🧪 **Chaos Testing**                      | Testing resilience with failures               |
+| 🔍 **Health Check**                       | Determine if service instance is healthy       |
+| 📊 **SLI**                                | Service Level Indicator                        |
+| 📉 **SLO**                                | Service Level Objective                        |
+| 📜 **SLA**                                | Service Level Agreement                        |
+| 🧠 **Observability Pipeline**             | Flow of monitoring data                        |
 
-🧠 **xDS API**\
-Envoy configuration APIs used by Istio.
-
-📡 **ADS (Aggregated Discovery Service)**\
-Unified xDS stream.
-
-📊 **Control Plane Scaling**\
-Scaling Istiod for large clusters.
-
-🧵 **Service Graph**\
-Visual representation of service communication.
-
-🧠 **Multi‑Cluster Mesh**\
-Service mesh spanning multiple clusters.
-
-🌎 **Multi‑Network Mesh**\
-Service mesh across different networks.
-
-🔀 **Traffic Mirroring**\
-Copy traffic to another service version.
-
-📉 **Rate Limiting**\
-Limit number of requests.
-
-📊 **Quota**\
-Usage limits for resources.
-
-🧪 **Chaos Testing**\
-Testing resilience with failures.
-
-🔍 **Health Check**\
-Determine if service instance is healthy.
-
-📊 **SLI**\
-Service Level Indicator.
-
-📉 **SLO**\
-Service Level Objective.
-
-📜 **SLA**\
-Service Level Agreement.
-
-🧠 **Observability Pipeline**\
-Flow of monitoring data.
-
-------------------------------------------------------------------------
+---
 
 ## ⚫ DevOps Operations
-
-🛠 **CI/CD Pipeline**\
-Automated build and deployment workflow.
-
-📦 **Container Image**\
-Packaged application artifact.
-
-🐳 **Docker**\
-Container runtime platform.
-
-🚀 **Helm**\
-Kubernetes package manager.
-
-🧭 **kubectl**\
-Command line tool for Kubernetes.
-
-🧠 **GitOps**\
-Managing infrastructure via Git.
-
-📜 **YAML Manifest**\
-Configuration file format.
-
-📊 **Monitoring**\
-Tracking system health.
-
-🚨 **Alerting**\
-Notifications when issues occur.
-
-📈 **Scaling**\
-Increasing service capacity.
+| 🌟 Term                | 📘 Meaning                              |
+| ---------------------- | --------------------------------------- |
+| 🛠️ **CI/CD Pipeline** | Automated build and deployment workflow |
+| 📦 **Container Image** | Packaged application artifact           |
+| 🐳 **Docker**          | Container runtime platform              |
+| 🚀 **Helm**            | Kubernetes package manager              |
+| 🧭 **kubectl**         | Command line tool for Kubernetes        |
+| 🧠 **GitOps**          | Managing infrastructure via Git         |
+| 📜 **YAML Manifest**   | Configuration file format               |
+| 📊 **Monitoring**      | Tracking system health                  |
+| 🚨 **Alerting**        | Notifications when issues occur         |
+| 📈 **Scaling**         | Increasing service capacity             |
 
 ------------------------------------------------------------------------
 
