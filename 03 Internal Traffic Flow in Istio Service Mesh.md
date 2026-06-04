@@ -1,34 +1,22 @@
 # 🚀 Internal Traffic Flow in Istio Service Mesh
+ * Istio manages **service-to-service communication inside a Kubernetes cluster** using **Envoy sidecar proxies**.
+ * Every service has an **Envoy proxy injected as a sidecar container**, which intercepts **all incoming and outgoing traffic**.
 
-Istio manages **service-to-service communication inside a Kubernetes cluster** using **Envoy sidecar proxies**.
-
-Every service has an **Envoy proxy injected as a sidecar container**, which intercepts **all incoming and outgoing traffic**.
-
----
-
-# 🧩 How Internal Traffic Works
-
-Each service in the cluster has:
-
-```
+## 🧩 How Internal Traffic Works
+ * Each service in the cluster has:
+```hcl
 Pod
  ├── Application Container
  └── Envoy Sidecar Proxy
 ```
+ * The **Envoy sidecar** controls communication between services without modifying application code.
 
-The **Envoy sidecar** controls communication between services without modifying application code.
-
----
-
-# 🔁 Service-to-Service Communication Example
-
+## 🔁 Service-to-Service Communication Example
 ### Scenario: Service A → Service B
 
 ### Step 1️⃣
-
-Service A sends a request to Service B.
-
-```
+ * Service A sends a request to Service B.
+```hcl
 Service A
    │
    ▼
@@ -36,61 +24,41 @@ Envoy Proxy (Sidecar)
 ```
 
 ### Step 2️⃣
-
-Service A’s **Envoy proxy intercepts the request**.
-
-Istio policies are applied:
-
-* traffic routing
-* security
-* load balancing
-
----
+ * Service A’s **Envoy proxy intercepts the request**.
+ * Istio policies are applied:
+    * traffic routing
+    * security
+    * load balancing
 
 ### Step 3️⃣
-
-The request is forwarded to **Service B’s Envoy proxy**.
-
-```
+ * The request is forwarded to **Service B’s Envoy proxy**.
+```hcl
 Envoy Proxy (Service A)
         │
         ▼
 Envoy Proxy (Service B)
 ```
 
----
-
 ### Step 4️⃣
-
-Service B’s proxy forwards the request to the **correct pod instance**.
-
-Routing decisions depend on:
-
-* load balancing policy
-* traffic rules
-* retries or failover policies
-
----
+ * Service B’s proxy forwards the request to the **correct pod instance
+ * Routing decisions depend on:
+    * `load balancing policy`
+    * `traffic rules`
+    * `retries` or `failover policies`
 
 # 🔐 Built-in Service Mesh Features
-
-Istio automatically manages internal traffic using several powerful features.
+ * Istio automatically manages internal traffic using several powerful features.
 
 ## ⚖️ Load Balancing
-
-Istio distributes traffic across **multiple pods of a service**.
-
-Supported algorithms:
-
-* 🔄 Round Robin
-* ⚡ Least Connections
-* 🎲 Random
-* 🎯 Weighted Routing
-* 🔁 Failover
-
-Example:
-
-```
+ * Istio distributes traffic across **multiple pods of a service**.
+ * Supported algorithms:
+    * 🔄 Round Robin
+    * ⚡ Least Connections
+    * 🎲 Random
+    * 🎯 Weighted Routing
+    * 🔁 Failover
+ * Example:
+```hcl
 Frontend → Payment Service
 
 Payment Pods:
@@ -98,74 +66,48 @@ Payment Pods:
 - payment-pod-2
 - payment-pod-3
 ```
-
-Istio distributes requests across these pods automatically.
-
----
+ * Istio distributes requests across these pods automatically.
 
 ## 🔒 mTLS (Mutual TLS)
-
-Istio encrypts communication between services.
-
-Benefits:
-
-* 🔐 Encryption of all service traffic
-* 🪪 Service identity verification
-* 🛡 Zero-trust networking
-
-All communication between services becomes **secure by default**.
-
----
+ * Istio encrypts communication between services.
+ * Benefits:
+    * 🔐 Encryption of all service traffic
+    * 🪪 Service identity verification
+    * 🛡 Zero-trust networking
+ * All communication between services becomes **secure by default**.
 
 ## 🚦 Traffic Management
-
-Istio enables advanced routing policies such as:
-
-* Canary deployments
-* Blue-green deployments
-* Traffic splitting
-* Retry policies
-* Timeouts
-* Circuit breaking
-* Fault injection
-
----
+ * Istio enables advanced routing policies such as:
+    * Canary deployments
+    * Blue-green deployments
+    * Traffic splitting
+    * Retry policies
+    * Timeouts
+    * Circuit breaking
+    * Fault injection
 
 # 🛠 Step-by-Step Guide for Internal Communication
-
 ## 1️⃣ Enable Istio Sidecar Injection
+ * Istio must inject **Envoy sidecar proxies** into application pods.
+ * Enable sidecar injection for your namespace:
 
-Istio must inject **Envoy sidecar proxies** into application pods.
-
-Enable sidecar injection for your namespace:
-
-```bash
+```hcl
 kubectl label namespace default istio-injection=enabled
 ```
+ * Once enabled:
+   * All new pods automatically get **Envoy sidecars**
+   * Istio can control network communication
 
-Once enabled:
+## ⚖️ Istio as a Load Balancer
+ * Istio works as both:
+    * **External load balancer controller**
+    * **Internal service load balancer**
 
-* All new pods automatically get **Envoy sidecars**
-* Istio can control network communication
+## 🌐 1. External (North-South) Load Balancing
+ * External traffic entering the cluster.
+ * Architecture:
 
----
-
-# ⚖️ Istio as a Load Balancer
-
-Istio works as both:
-
-* **External load balancer controller**
-* **Internal service load balancer**
-
----
-
-# 🌐 1. External (North-South) Load Balancing
-
-External traffic entering the cluster.
-
-Architecture:
-
-```
+```hcl
 Client
   │
   ▼
@@ -177,28 +119,19 @@ Istio Gateway
   ▼
 Services in Mesh
 ```
+ * Key Points:
+   * Uses **Istio Gateway**
+   * Requires **Kubernetes LoadBalancer service**
+   * Provides **advanced routing control**
+ * Example features:
+    * traffic splitting
+    * canary deployments
+    * path-based routing
 
-Key Points:
-
-* Uses **Istio Gateway**
-* Requires **Kubernetes LoadBalancer service**
-* Provides **advanced routing control**
-
-Example features:
-
-* traffic splitting
-* canary deployments
-* path-based routing
-
----
-
-# 🔄 2. Internal (East-West) Load Balancing
-
-Internal service-to-service communication.
-
-Architecture:
-
-```
+## 🔄 2. Internal (East-West) Load Balancing
+ * Internal service-to-service communication.
+ * Architecture:
+```hcl
 Service A
   │
   ▼
@@ -210,27 +143,21 @@ Envoy Proxy
   ▼
 Service B Pods
 ```
-
-Istio automatically distributes traffic between pods.
-
-Managed using:
-
-* **VirtualService**
-* **DestinationRule**
-
-Supported protocols:
-
-* HTTP
-* gRPC
-* TCP
+ * Istio automatically distributes traffic between pods.
+ * Managed using:
+    * **VirtualService**
+    * **DestinationRule**
+ * Supported protocols:
+    * HTTP
+    * gRPC
+    * TCP
 
 ---
 
-# 📦 Example: Frontend → Payment Service
+## 📦 Example: Frontend → Payment Service
+ * If **frontend** calls **payment**, Istio automatically distributes traffic:
 
-If **frontend** calls **payment**, Istio automatically distributes traffic:
-
-```
+```hcl
 Frontend
    │
    ▼
@@ -242,65 +169,50 @@ Payment Pods
  ├── payment-v2
  └── payment-v3
 ```
+ * Istio decides **which pod receives the request**.
 
-Istio decides **which pod receives the request**.
-
----
-
-# 🔧 Key Features as a Load Balancer
-
-Istio provides advanced traffic control:
-
-### 🎯 Fine-grained Routing
-
-* Canary deployments
-* Blue/green deployments
-* Traffic shifting
-
-### 🔁 Reliability Controls
-
-* Retry policies
-* Timeouts
-* Circuit breaking
-
-### 🧪 Testing Capabilities
-
-* Fault injection
-* Chaos testing
+## 🔧 Key Features as a Load Balancer
+ * Istio provides advanced traffic control:
+ * 🎯 Fine-grained Routing
+    * Canary deployments
+    * Blue/green deployments
+    * Traffic shifting
+ * 🔁 Reliability Controls
+    * Retry policies
+    * Timeouts
+    * Circuit breaking
+ * 🧪 Testing Capabilities
+    * Fault injection
+    * Chaos testing
 
 ---
 
 # ⚔️ Ingress vs Service Mesh
-
-| Feature         | Ingress          | Istio Service Mesh             |
-| --------------- | ---------------- | ------------------------------ |
-| Traffic Type    | North-South      | East-West                      |
-| Scope           | External traffic | Internal service communication |
-| Security        | Basic TLS        | mTLS                           |
-| Observability   | Limited          | Full tracing & metrics         |
-| Traffic Control | Basic routing    | Advanced policies              |
+| 🧩 **Feature**            | 🌐 **Ingress**   | 🚀 **Istio Service Mesh**      | 🧠 **Explanation**                                                                     | 🎯 **Use Case**              |
+| ------------------------- | ---------------- | ------------------------------ | ---------------------------------------------------------------------------------------- | ---------------------------- |
+| 🌍 **Traffic Type**       | North-South      | East-West                      | Ingress manages traffic entering/leaving cluster; Istio manages traffic between services | External vs internal traffic |
+| 🎯 **Scope**              | External traffic | Internal service communication | Different networking responsibilities                                                    | API access vs microservices  |
+| 🔐 **Security**           | Basic TLS        | ✅ mTLS                         | Istio encrypts service-to-service communication                                          | Zero Trust architecture     |
+| 📊 **Observability**      | Limited          | ✅ Full metrics & tracing       | Istio provides deep visibility into requests                                             | Troubleshooting             |
+| 🚦 **Traffic Control**    | Basic routing    | Advanced traffic policies      | Canary, retries, timeouts, fault injection                                               | Progressive delivery          |
+| 🛡️ **Circuit Breaking**  | ❌ No             | ✅ Yes                          | Prevents cascading failures                                                              | Resilience                   |
+| 🧪 **Fault Injection**    | ❌ No             | ✅ Yes                          | Simulate failures for testing                                                            | Chaos engineering           |
+| 🔄 **Retries & Timeouts** | Limited          | ✅ Advanced                     | Fine-grained traffic control                                                             | Reliability                  |
+| ⚙️ **Complexity**         | Low              | High                           | Istio introduces sidecars and control plane                                              | Operational trade-off          |
 
 ### Summary
-
-```
+```hcl
 Ingress → External traffic entering cluster
 Service Mesh → Internal service-to-service traffic
 ```
 
----
-
 # 🎯 Final Takeaway
-
-Istio acts as a **smart networking layer for microservices**.
-
-It provides:
-
-✅ Secure communication (mTLS)
-✅ Intelligent traffic routing
-✅ Automatic load balancing
-✅ Reliability features
-✅ Deep observability
-
-All **without modifying application code**.
-
-Istio moves networking logic **out of the application and into the infrastructure layer**.
+ * Istio acts as a **smart networking layer for microservices**.
+ * It provides:
+   * ✅ Secure communication (mTLS)
+   * ✅ Intelligent traffic routing
+   * ✅ Automatic load balancing
+   * ✅ Reliability features
+   * ✅ Deep observability
+ * All **without modifying application code**.
+ * Istio moves networking logic **out of the application and into the infrastructure layer**.
