@@ -1,19 +1,13 @@
 # 🌐 AWS Load Balancer + Istio Gateway + VirtualService (EKS External Traffic Guide)
+ * This guide explains **how external traffic enters an Istio service mesh running on Amazon EKS** using:
+    * AWS Load Balancer
+    * Istio Ingress Gateway
+    * Istio Gateway
+    * VirtualService
+ * These components work together to route **internet traffic to Kubernetes pods**.
 
-This guide explains **how external traffic enters an Istio service mesh running on Amazon EKS** using:
-
-* AWS Load Balancer
-* Istio Ingress Gateway
-* Istio Gateway
-* VirtualService
-
-These components work together to route **internet traffic to Kubernetes pods**.
-
----
-
-# 🧭 High-Level Architecture
-
-```text
+## 🧭 High-Level Architecture
+```hcl
 🌍 Internet (User)
         │
         ▼
@@ -35,30 +29,19 @@ These components work together to route **internet traffic to Kubernetes pods**.
 🚀 Application Pods
 ```
 
----
-
-# ✅ Step 1: Istio Ingress Gateway (LoadBalancer Service)
-
-When Istio is installed, it automatically creates a Kubernetes Service called:
-
-```
+## ✅ Step 1: Istio Ingress Gateway (LoadBalancer Service)
+ * When Istio is installed, it automatically creates a Kubernetes Service called:
+```hcl
 istio-ingressgateway
 ```
-
-You **do NOT need to create your own service**.
-
-This service is typically created as:
-
+ * You **do NOT need to create your own service**.
+ * This service is typically created as:
 ```
 type: LoadBalancer
 ```
-
-In **Amazon EKS**, this automatically provisions an **AWS External Load Balancer**.
-
----
+ * In **Amazon EKS**, this automatically provisions an **AWS External Load Balancer**.
 
 ## Example Service Configuration
-
 ```yaml
 apiVersion: v1
 kind: Service
@@ -77,25 +60,16 @@ spec:
     targetPort: 8443
     name: https
 ```
+* Key Points
+    * ✅ AWS automatically creates an **external Load Balancer**
+    * ✅ The Load Balancer receives **public traffic**
+    * ✅ Traffic is forwarded to **istio-ingressgateway pods**
 
-### Key Points
-
-✅ AWS automatically creates an **external Load Balancer**
-✅ The Load Balancer receives **public traffic**
-✅ Traffic is forwarded to **istio-ingressgateway pods**
-
----
-
-# 🚪 Step 2: Istio Gateway Resource
-
-The **Istio Gateway** defines how traffic **enters the service mesh**.
-
-It works similarly to **Kubernetes Ingress**, but with **more advanced routing control**.
-
----
+## 🚪 Step 2: Istio Gateway Resource
+ * The **Istio Gateway** defines how traffic **enters the service mesh**.
+ * It works similarly to **Kubernetes Ingress**, but with **more advanced routing control**.
 
 ## Gateway Example
-
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -114,11 +88,10 @@ spec:
     - "myapp.example.com"
 ```
 
-### What This Gateway Does
-
-* Listens on **port 80**
-* Accepts traffic only for **myapp.example.com**
-* Routes traffic through **istio-ingressgateway**
+* What This Gateway Does
+   * Listens on **port 80**
+   * Accepts traffic only for **myapp.example.com**
+   * Routes traffic through **istio-ingressgateway**
 
 ---
 
