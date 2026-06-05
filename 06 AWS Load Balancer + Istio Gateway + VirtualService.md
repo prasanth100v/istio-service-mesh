@@ -93,18 +93,11 @@ spec:
    * Accepts traffic only for **myapp.example.com**
    * Routes traffic through **istio-ingressgateway**
 
----
+## 🚦 Step 3: VirtualService (Traffic Routing)
+ * A **VirtualService** defines how traffic should be routed **inside the service mesh**.
+ * It connects the **Gateway → Kubernetes services**.
 
-# 🚦 Step 3: VirtualService (Traffic Routing)
-
-A **VirtualService** defines how traffic should be routed **inside the service mesh**.
-
-It connects the **Gateway → Kubernetes services**.
-
----
-
-## VirtualService Example
-
+### VirtualService Example
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -126,124 +119,73 @@ spec:
         port:
           number: 80
 ```
-
----
-
-## What This Configuration Means
-
-When a request arrives:
-
-```
+### What This Configuration Means
+ * When a request arrives:
+```hcl
 http://myapp.example.com/app
 ```
+ * Istio will:
+   * 1️⃣ Match the `/app` path
+   * 2️⃣ Route traffic to **myapp-service**
+   * 3️⃣ Forward traffic to **pods behind that service**
 
-Istio will:
+## ⚠️ DestinationRule Requirement
+ * If your application **does not have multiple versions**, you **do NOT need a DestinationRule**.
+ * Example where it is required:
+     * Canary deployments
+     * Blue-green deployments
+     * Version-based routing
+  * For **basic routing**, VirtualService alone is enough.
 
-1️⃣ Match the `/app` path
-2️⃣ Route traffic to **myapp-service**
-3️⃣ Forward traffic to **pods behind that service**
-
----
-
-# ⚠️ DestinationRule Requirement
-
-If your application **does not have multiple versions**, you **do NOT need a DestinationRule**.
-
-Example where it is required:
-
-* Canary deployments
-* Blue-green deployments
-* Version-based routing
-
-For **basic routing**, VirtualService alone is enough.
-
----
-
-# 🌍 DNS Configuration
-
-After the AWS Load Balancer is created, it receives a **DNS name** like:
-
-```
+## 🌍 DNS Configuration
+ * After the AWS Load Balancer is created, it receives a **DNS name** like:
+```hcl
 a1b2c3d4e5f6g7h8.elb.amazonaws.com
 ```
-
-You must configure your DNS provider.
-
-Example:
-
-```
+ * You must configure your DNS provider.
+ * Example:
+```hcl
 myapp.example.com → a1b2c3d4e5f6g7h8.elb.amazonaws.com
 ```
-
-Once configured, users can access:
-
-```
+ * Once configured, users can access:
+```hcl
 http://myapp.example.com/app
 ```
-
----
 
 # 🔄 Complete Traffic Flow
-
 ## Step-by-Step
-
-### 1️⃣ User Sends Request
-
-```
+ * 1️⃣ User Sends Request
+```hcl
 http://myapp.example.com/app
 ```
-
----
-
-### 2️⃣ AWS Load Balancer Receives Request
-
-```
+ * 2️⃣ AWS Load Balancer Receives Request
+```hcl
 User → AWS Load Balancer
 ```
+   * The load balancer forwards traffic to **istio-ingressgateway**.
 
-The load balancer forwards traffic to **istio-ingressgateway**.
+ * 3️⃣ Istio Ingress Gateway Handles Traffic
+  * Envoy proxy inside **istio-ingressgateway** receives the request.
 
----
+ * 4️⃣ Istio Gateway Accepts Traffic
+ * The Gateway checks:
+     * Hostname
+     * Port
+     * Protocol
 
-### 3️⃣ Istio Ingress Gateway Handles Traffic
+  * 5️⃣ VirtualService Routes Traffic
+   * VirtualService determines **which Kubernetes service should receive the request**.
 
-Envoy proxy inside **istio-ingressgateway** receives the request.
-
----
-
-### 4️⃣ Istio Gateway Accepts Traffic
-
-The Gateway checks:
-
-* Hostname
-* Port
-* Protocol
-
----
-
-### 5️⃣ VirtualService Routes Traffic
-
-VirtualService determines **which Kubernetes service should receive the request**.
-
----
-
-### 6️⃣ Kubernetes Service Forwards Traffic
-
-```
+ * 6️⃣ Kubernetes Service Forwards Traffic
+```hcl
 myapp-service → Pod
 ```
+ * 7️⃣ Application Pod Processes Request
+ * The request reaches the **application container**.
 
----
+## 📊 Visual Traffic Flow
 
-### 7️⃣ Application Pod Processes Request
-
-The request reaches the **application container**.
-
----
-
-# 📊 Visual Traffic Flow
-
-```text
+```hcl
 🌍 Internet (User)
         │
         ▼
@@ -299,17 +241,14 @@ Integrated with:
 ---
 
 # 🧠 Final Takeaway
+ * In **Amazon EKS with Istio**, external traffic is handled by three main components:
 
-In **Amazon EKS with Istio**, external traffic is handled by three main components:
+| 🧩 **Component**         | 🎯 **Role**                      | 📖 **Description**                                                                           | 💡 **Example**                              |
+| ------------------------ | -------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| ⚖️ **AWS Load Balancer** | Entry point from the Internet    | Receives external traffic and forwards it to the Istio Ingress Gateway running in Kubernetes | Internet User → AWS Load Balancer           |
+| 🌐 **Istio Gateway**     | Defines ports, hosts & protocols | Configures how external traffic enters the service mesh (HTTP, HTTPS, TLS, etc.)             | Listen on port 80/443 for `app.example.com` |
+| 🚦 **VirtualService**    | Routes traffic to services       | Defines routing rules and traffic destinations inside the mesh                               | Route `/api` → backend service              |
 
-| Component         | Role                          |
-| ----------------- | ----------------------------- |
-| AWS Load Balancer | Entry point from the internet |
-| Istio Gateway     | Defines ports & protocols     |
-| VirtualService    | Routes traffic to services    |
-
-Together they provide a **powerful and flexible way to expose microservices running in Kubernetes**.
-
----
+ * Together they provide a **powerful and flexible way to expose microservices running in Kubernetes**.
 
 ⭐ **Istio + EKS gives you enterprise-grade traffic control, security, and observability for microservices.**
