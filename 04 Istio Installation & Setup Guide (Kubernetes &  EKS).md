@@ -2,7 +2,7 @@
  * This guide covers **installing Istio, verifying the installation, deploying applications, managing traffic, and troubleshooting the service mesh**.
  * Istio extends Kubernetes using **Custom Resource Definitions (CRDs)** to control traffic, security, and observability.
 
-# 🔧 1️⃣ Install Istio
+## 🔧 1️⃣ Install Istio
 ### Download Istio
 ```hcl
 curl -L https://istio.io/downloadIstio | sh -
@@ -35,7 +35,7 @@ istioctl install --set profile=default -y
 ```
  * 👉 Most enterprises start with default and customize as needed.
 
-# 🧩 2️⃣ Enable Sidecar Injection
+## 🧩 2️⃣ Enable Sidecar Injection
  * Istio works by injecting **Envoy sidecar proxies** into application pods.
  * Enable sidecar injection in your namespace:
 ```hcl
@@ -54,21 +54,21 @@ app-container istio-proxy
 ```
  * If `istio-proxy` appears, the injection worked successfully.
 
-# ✅ 3️⃣ Verify Istio Installation
+## ✅ 3️⃣ Verify Istio Installation
  * Run the verification command:
 ```hcl
 istioctl verify-install
 ```
  * This checks whether **all required Istio components are installed correctly**.
 
-# 📦 4️⃣ Deploy Applications
+## 📦 4️⃣ Deploy Applications
  * Deploy your Kubernetes applications into the mesh.
 ```hcl
 kubectl apply -f <deployment>.yaml
 ```
  * Since sidecar injection is enabled, **Envoy proxies will automatically be added to the pods**.
 
-# 🔍 5️⃣ View Istio Components
+## 🔍 5️⃣ View Istio Components
  * Check Istio system components:
 ```hcl
 kubectl get pods -n istio-system
@@ -81,7 +81,7 @@ kubectl get svc -n istio-system
     * `prometheus`
     * `grafana`
 
-# 🚦 6️⃣ Traffic Routing
+## 🚦 6️⃣ Traffic Routing
  * Istio controls traffic using **VirtualService** and **DestinationRule**.
  * Apply configuration:
 ```hcl
@@ -92,7 +92,7 @@ kubectl apply -f virtualservice.yaml
 kubectl describe virtualservice <name>
 ```
 
-# 📊 7️⃣ Check Istio Resources
+## 📊 7️⃣ Check Istio Resources
  * List Istio configuration resources:
 ```hcl
 kubectl get gateway
@@ -107,7 +107,7 @@ kubectl get peerauthentication
     * security policies
     * external service access
 
-# 📈 8️⃣ Access Kiali (Service Mesh Dashboard)
+## 📈 8️⃣ Access Kiali (Service Mesh Dashboard)
  * Kiali provides a **visual representation of the service mesh**.
  * Run port-forward:
 ```hcl
@@ -123,7 +123,7 @@ http://localhost:20001
     * error rates
     * latency
 
-# 🛠 9️⃣ Troubleshooting Commands
+## 🛠 9️⃣ Troubleshooting Commands
 ### Detect configuration issues
 ```bash
 istioctl analyze
@@ -172,7 +172,7 @@ kubectl logs <pod-name> -c istio-proxy
 istioctl proxy-config --help
 ```
 
-# 🗑 Uninstall Istio
+## 🗑 Uninstall Istio
  * Remove Istio from the cluster.
 ```hcl
 istioctl uninstall --purge
@@ -184,7 +184,7 @@ kubectl delete namespace istio-system
 
 ---
 
-# 🧩 What Are Istio CRDs?
+## 🧩 What Are Istio CRDs?
  * Istio extends Kubernetes using **Custom Resource Definitions (CRDs)**.
  * These CRDs define **how traffic flows and how services communicate in the mesh**.
 
@@ -229,7 +229,7 @@ kubectl delete namespace istio-system
    * ✅ **Service mesh visibility**
  * Instead of managing networking inside application code, **Istio handles it at the infrastructure level using Envoy proxies**.
 
-# 🚀 DevOps Cheat Sheet
+## 🚀 DevOps Cheat Sheet
 ```hcl
 # Install Istio
 istioctl install --set profile=demo -y
